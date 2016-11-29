@@ -23,9 +23,12 @@ public class MemoryAllocater {
     int c = FF(size, p, mem, fin);
     write(size, fin,"FFOutput.txt", c);
 
+<<<<<<< HEAD
     c = BF(size, p, mem, fin);
     write(size, fin, "BFOutput.txt", c);
 
+=======
+>>>>>>> 04cd38a53ee21e777e9e137645971b0a3f76b0e1
 
     c = WF(size, p, mem, fin);
     write(size, fin, "WFOutput.txt", c);
