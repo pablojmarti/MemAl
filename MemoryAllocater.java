@@ -6,16 +6,14 @@ public class MemoryAllocater {
 
 
   public static void main(String[] args) {
-    String fileName = "Minput.txt";
     int size = readS("Minput.txt");
-    fileName = "Pinput.txt";
     size = readS("Pinput.txt");
 
     MemorySlot mem[] = new MemorySlot[size];
-    mem = readM(size, fileName);
+    mem = readM(size, "Minput.txt");
 
     Process p[] = new Process[size];
-    p = readP(size, fileName);
+    p = readP(size, "Pinput.txt");
 
     MemorySlot fin[] = new MemorySlot[size];
     for(int i = 0; i < size; i++){
@@ -23,7 +21,8 @@ public class MemoryAllocater {
     }
 
     int c = FF(size, p, mem, fin);
- 
+    write(size, fin,"FFOutput.txt", c);
+
   }
 
   // read file from Minput
@@ -185,7 +184,7 @@ public class MemoryAllocater {
       for(int i = 0; i < size; i++){
         output.write(String.valueOf(mem[i].getSTime() + " "));
         output.write(String.valueOf(mem[i].getETime() + " "));
-        output.write(String.valueOf(mem[i].getSize() + " " + "\n"));
+        output.write(String.valueOf(mem[i].getESize() + " " + "\n"));
       }
       output.write(String.valueOf(c));
       output.close();
