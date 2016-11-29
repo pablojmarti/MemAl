@@ -87,12 +87,12 @@ public class MemoryAllocater {
 
       int c = FF(size, ps, mem, ffMem);
       write(size, ffMem, "FFOutput.txt", c);
-      c = BF(size, ps, mem, bfMem);
+      //c = BF(size, ps, mem, bfMem);
       write(size, bfMem, "BFOutput.txt", c);
 
       for(int i = 0; i < size; i++){
         System.out.print("start: " + ffMem[i].getSTime() + " end: " + ffMem[i].getETime() + " ID: " + ffMem[i].getESize()  + "\n");
-        //System.out.println(c);
+        System.out.println(c);
       }
 
       for(int i = 0; i < size; i++){
@@ -100,9 +100,9 @@ public class MemoryAllocater {
       }
     }
 
-      catch(IOException e){
-        System.out.println(e);
-      }
+    catch(IOException e){
+      System.out.println(e);
+    }
 
 
   }
@@ -114,14 +114,21 @@ public class MemoryAllocater {
 
     for(int i = 0; i < size; i++){
       for(int j = 0; j < size; j++){
-        if(ps[i].getSize() <= mem[j].getSize() && !mem[j].getUsed()){
-          ffMem[j].setSTime(mem[j].getSTime());
-          ffMem[j].setETime(mem[j].getETime() - (mem[j].getSize() - ps[i].getSize()));
-          ffMem[j].setESize(ps[i].getPid());
-          ffMem[j].setUsed(true);
-          mem[j].setUsed(true);
+        if(ps[i].getSize() <= mem[j].getSize()){
+          if( !mem[j].getUsed()){
+            if (!ps[i].getUsed()){
+              ffMem[j].setSTime(mem[j].getSTime());
+              ffMem[j].setETime(mem[j].getETime() - (mem[j].getSize() - ps[i].getSize()));
+              ffMem[j].setESize(ps[i].getPid());
+              ffMem[j].setUsed(true);
+              ps[i].setUsed(true);
+              mem[j].setUsed(true);
+            }
+          } 
         }
       }
+      if (!ps[i].getUsed())
+        c = -ps[i].getPid();
     }
     return c;
   }
