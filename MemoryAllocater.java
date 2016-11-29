@@ -114,10 +114,11 @@ public class MemoryAllocater {
 
     for(int i = 0; i < size; i++){
       for(int j = 0; j < size; j++){ 
-        if(ps[i].getSize() <= mem[j].getSize()){
+        if(ps[i].getSize() <= mem[j].getSize() && !mem[j].getUsed()){
           ffMem[i].setSTime(mem[j].getSTime());
           ffMem[i].setETime(mem[j].getETime() - (mem[j].getSize() - ps[i].getSize()));
           ffMem[i].setESize(ps[i].getPid());
+          mem[j].setUsed(true);
         }
       }
     }

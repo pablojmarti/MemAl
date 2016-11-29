@@ -32,6 +32,10 @@ public class MemorySlot {
     this.eSize = item;
   }
 
+  public void setUsed(boolean item){
+    this.used = item;
+  }
+
   public int getSTime(){
     return sTime;
   }
@@ -46,6 +50,10 @@ public class MemorySlot {
 
   public int getESize(){
     return eSize;
+  }
+
+  public boolean getUsed(){
+    return used;
   }
 }
 
