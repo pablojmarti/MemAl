@@ -107,26 +107,29 @@ public class MemoryAllocater {
 
   }
 
+  // First Fit Method
   public static int FF(int size, Process ps[], MemorySlot mem[], MemorySlot ffMem[]){
-    MemorySlot[] temp = new MemorySlot[size];
-    temp = mem;
-    int c = 0;
+    int c = 0;    // create the varible that will return the negative
 
     for(int i = 0; i < size; i++){
       for(int j = 0; j < size; j++){
-        if(ps[i].getSize() <= mem[j].getSize()){
-          if( !mem[j].getUsed()){
-            if (!ps[i].getUsed()){
+        if(ps[i].getSize() <= mem[j].getSize()){ // if the size of the process is less than the size of the memory slot
+          if( !mem[j].getUsed()){     // and if the memory slot isn't used
+            if (!ps[i].getUsed()){    // and if the process slot hasn't been used
+
+              // Add the process to the memory slot and calculate the correct end time
               ffMem[j].setSTime(mem[j].getSTime());
               ffMem[j].setETime(mem[j].getETime() - (mem[j].getSize() - ps[i].getSize()));
               ffMem[j].setESize(ps[i].getPid());
-              ffMem[j].setUsed(true);
-              ps[i].setUsed(true);
-              mem[j].setUsed(true);
+              ffMem[j].setUsed(true);   // the memory slot is used
+              ps[i].setUsed(true);      // the process is used
+              mem[j].setUsed(true);     // the memory slot is used
             }
           } 
         }
       }
+      
+      // if the process hasn't been used add it to c and make it a negative
       if (!ps[i].getUsed())
         c = -ps[i].getPid();
     }
