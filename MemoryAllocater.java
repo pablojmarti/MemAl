@@ -16,6 +16,13 @@ public class MemoryAllocater {
 
     Process p[] = new Process[size];
     p = readP(size, fileName);
+
+    MemorySlot fin[] = new MemorySlot[size];
+    for(int i = 0; i < size; i++){
+      fin[i] = new MemorySlot();
+    }
+
+    int c = FF(size, p, mem, fin);
  
   }
 
