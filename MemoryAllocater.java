@@ -23,6 +23,9 @@ public class MemoryAllocater {
     int c = FF(size, p, mem, fin);
     write(size, fin,"FFOutput.txt", c);
 
+    c = BF(size, p, mem, fin);
+    write(size, fin, "BFOutput.txt", c);
+
 
     c = WF(size, p, mem, fin);
     write(size, fin, "WFOutput.txt", c);
@@ -146,7 +149,35 @@ public class MemoryAllocater {
   }
 
   public static int BF(int size, Process ps[], MemorySlot mem[], MemorySlot bfMem[]){
-   
+  int c = 0; 
+
+  int smol = -1;
+  for(int i = 0; i < size; i++){
+    for(int j = 0; j < size; j++){
+      if(mem[j].getSize() >= ps[i].getSize()){
+        if(smol == -1){
+          smol = j;
+        }
+        else if (mem[j].getSize() < mem[smol].getSize()){
+          smol = j;
+        }
+      }
+    }
+    if(smol != -1){
+      bfMem[i].setSTime(mem[smol].getSTime());
+      bfMem[i].setETime(mem[smol].getSTime() + ps[i].getSize());
+      bfMem[i].setESize(ps[i].getPid());
+
+      ps[i].setSize(0);
+      ps[i].setUsed(true);
+
+      smol = -1;
+    }
+
+    if(!ps[i].getUsed()){
+      c = -ps[i].getPid();
+    }
+  }
     return c;
   }
 

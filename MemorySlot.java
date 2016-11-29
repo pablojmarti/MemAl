@@ -24,8 +24,8 @@ public class MemorySlot {
     this.eTime = item;
   }
 
-  public void setSize(){
-    this.size = this.eTime - this.sTime;
+  public void setSize(int item){
+    this.size = item; 
   }
 
   public void setESize(int item){
