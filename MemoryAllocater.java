@@ -4,10 +4,25 @@ import java.util.*;
 
 public class MemoryAllocater {
 
+
   public static void main(String[] args) {
     String fileName = "Minput.txt";
+    int size = readS("Minput.txt");
+    fileName = "Pinput.txt";
+    size = readS("Pinput.txt");
 
-    int size;
+    MemorySlot mem[] = new MemorySlot[size];
+    mem = readM(size, fileName);
+
+    Process p[] = new Process[size];
+    p = readP(size, fileName);
+ 
+  }
+
+  // read file from Minput
+  public static int readS(String fileName){
+
+    int size = 0;
 
     try {
       Reader inp = new FileReader(fileName);
@@ -18,94 +33,78 @@ public class MemoryAllocater {
 
       size = (int)tstream.nval;
 
-      MemorySlot[] mem = new MemorySlot[size];
-      Process[] ps = new Process[size];
-      for(int i = 0; i < size; i++){
-        mem[i] = new MemorySlot();
-        ps[i] = new Process();
-      }
-
-      token = tstream.nextToken();
-
-      for(int i = 0; i < size; i++){
-        if(token == size){
-          break;
-        }
-        else{
-          mem[i].setSTime((int)tstream.nval);
-          token = tstream.nextToken();
-          mem[i].setETime((int)tstream.nval);
-          token = tstream.nextToken();
-          mem[i].setSize();
-          mem[i].setESize(mem[i].getSize());
-
-        }
-      }
-
-      token = tstream.nextToken();
-
-      for(int i = 0; i < size; i++){
-        if(token == StreamTokenizer.TT_EOF){
-          break;
-        }
-        else{
-          ps[i].setPid((int)tstream.nval);
-          token = tstream.nextToken();
-          ps[i].setSize((int)tstream.nval);
-          token = tstream.nextToken();
-
-        }
-      }
-
-
-      System.out.println("End of Reading"); 
-
-      // Test Loop
-      System.out.println("total SIZE " + size);
-      for(int i = 0; i < size; i++){
-        System.out.print("start: " + mem[i].getSTime());
-        System.out.print(" end: " + mem[i].getETime());
-        System.out.print(" size: " + mem[i].getSize() + "\n");
-
-      }
-      for(int i = 0; i < size; i++){
-        System.out.print("PID: " + ps[i].getPid());
-        System.out.print(" size: " + ps[i].getSize() + "\n");
-      }
-
-
-
-      MemorySlot[] ffMem = new MemorySlot[size];
-      MemorySlot[] bfMem = new MemorySlot[size];
-      MemorySlot[] wfMem = new MemorySlot[size];
-
-      for(int i = 0; i < size; i++){
-        ffMem[i] = new MemorySlot();
-        bfMem[i] = new MemorySlot();
-        wfMem[i] = new MemorySlot();
-      }
-
-      int c = FF(size, ps, mem, ffMem);
-      write(size, ffMem, "FFOutput.txt", c);
-      //c = BF(size, ps, mem, bfMem);
-      write(size, bfMem, "BFOutput.txt", c);
-
-      for(int i = 0; i < size; i++){
-        System.out.print("start: " + ffMem[i].getSTime() + " end: " + ffMem[i].getETime() + " ID: " + ffMem[i].getESize()  + "\n");
-        System.out.println(c);
-      }
-
-      for(int i = 0; i < size; i++){
-        // System.out.print("start: " + bfMem[i].getSTime() + " end: " + bfMem[i].getETime() + " ID: " + bfMem[i].getESize() + c +"\n");
-      }
     }
-
     catch(IOException e){
       System.out.println(e);
     }
-
-
+    return size;
   }
+
+  public static MemorySlot[] readM(int size, String fileName){
+
+    MemorySlot[] temp = new MemorySlot[size];
+    for(int i = 0; i < size; i++){
+      temp[i] = new MemorySlot();
+    }
+
+    try {
+      Reader inp = new FileReader(fileName);
+      StreamTokenizer tstream = new StreamTokenizer(inp);
+      tstream.parseNumbers();
+
+      int token = tstream.nextToken();
+
+      for(int i = 0; i < size; i++){
+        if(token == StreamTokenizer.TT_EOF)
+          break;
+        else{
+          token = tstream.nextToken();
+          temp[i].setSTime((int)tstream.nval);
+          token = tstream.nextToken();
+          temp[i].setETime((int)tstream.nval);
+          temp[i].setSize();
+          temp[i].setUsed(false);
+        }
+      }
+    }
+    catch(IOException e){
+      System.out.println(e);
+    }
+    return temp;
+  } 
+
+  public static Process[] readP(int size, String fileName){
+
+    Process[] temp = new Process[size];
+    for(int i = 0; i < size; i++){
+      temp[i] = new Process();
+    }
+
+    try {
+      Reader inp = new FileReader(fileName);
+      StreamTokenizer tstream = new StreamTokenizer(inp);
+      tstream.parseNumbers();
+
+      int token = tstream.nextToken();
+
+      for(int i = 0; i < size; i++){
+        if(token == StreamTokenizer.TT_EOF)
+          break;
+        else{
+          token = tstream.nextToken();
+          temp[i].setPid((int)tstream.nval);
+          token = tstream.nextToken();
+          temp[i].setSize((int)tstream.nval);
+          temp[i].setUsed(false);
+        }
+      }
+    }
+    catch(IOException e){
+      System.out.println(e);
+    }
+    return temp;
+  } 
+
 
   // First Fit Method
   public static int FF(int size, Process ps[], MemorySlot mem[], MemorySlot ffMem[]){
@@ -128,7 +127,7 @@ public class MemoryAllocater {
           } 
         }
       }
-      
+
       // if the process hasn't been used add it to c and make it a negative
       if (!ps[i].getUsed())
         c = -ps[i].getPid();
