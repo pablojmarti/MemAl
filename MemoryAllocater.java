@@ -92,7 +92,7 @@ public class MemoryAllocater {
 
       for(int i = 0; i < size; i++){
         System.out.print("start: " + ffMem[i].getSTime() + " end: " + ffMem[i].getETime() + " ID: " + ffMem[i].getESize()  + "\n");
-        System.out.println(c);
+        //System.out.println(c);
       }
 
       for(int i = 0; i < size; i++){
@@ -113,11 +113,12 @@ public class MemoryAllocater {
     int c = 0;
 
     for(int i = 0; i < size; i++){
-      for(int j = 0; j < size; j++){ 
+      for(int j = 0; j < size; j++){
         if(ps[i].getSize() <= mem[j].getSize() && !mem[j].getUsed()){
-          ffMem[i].setSTime(mem[j].getSTime());
-          ffMem[i].setETime(mem[j].getETime() - (mem[j].getSize() - ps[i].getSize()));
-          ffMem[i].setESize(ps[i].getPid());
+          ffMem[j].setSTime(mem[j].getSTime());
+          ffMem[j].setETime(mem[j].getETime() - (mem[j].getSize() - ps[i].getSize()));
+          ffMem[j].setESize(ps[i].getPid());
+          ffMem[j].setUsed(true);
           mem[j].setUsed(true);
         }
       }
