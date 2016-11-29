@@ -23,6 +23,10 @@ public class MemoryAllocater {
     int c = FF(size, p, mem, fin);
     write(size, fin,"FFOutput.txt", c);
 
+
+    c = WF(size, p, mem, fin);
+    write(size, fin, "WFOutput.txt", c);
+
   }
 
   // read file from Minput
@@ -68,7 +72,7 @@ public class MemoryAllocater {
           temp[i].setSTime((int)tstream.nval);
           token = tstream.nextToken();
           temp[i].setETime((int)tstream.nval);
-          temp[i].setSize();
+          temp[i].setSize(temp[i].getETime() - temp[i].getSTime());
           temp[i].setUsed(false);
         }
       }
@@ -171,7 +175,37 @@ public class MemoryAllocater {
     return c;
   }
 
-  public void WF(int size, Process ps[], MemorySlot mem[], MemorySlot wfMem[]){
+  public static int WF(int size, Process ps[], MemorySlot mem[], MemorySlot wfMem[]){
+
+    int big = -1;
+    int c = 0;
+    for(int i = 0; i < size; i++){
+      for(int j = 0; j < size; j++){
+        if(mem[j].getSize() >= ps[i].getSize()){
+          if(big == -1){
+            big = i;
+          }
+          else if(mem[j].getSize() > mem[big].getSize()){
+            big = i;
+          }
+        }
+      }
+      if(big != -1){
+        wfMem[i].setSTime(mem[big].getSTime());
+        wfMem[i].setETime(mem[big].getSTime() + ps[i].getSize());
+        wfMem[i].setESize(ps[i].getPid());
+        mem[big].setSTime(mem[big].getSTime() + ps[i].getSize());
+        mem[big].setSize(mem[big].getSize() - ps[i].getSize());
+
+        ps[i].setSize(0);
+        ps[i].setUsed(true);
+        big = -1;
+      }
+    }
+
+
+    
+    return c;
   }
 
   public static void write(int size, MemorySlot mem[], String outName, int c){
